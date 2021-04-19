@@ -1,6 +1,6 @@
 CREATE DATABASE alura; --> Criar nova base
 
-\l -> Mostrar informações das bases
+\l -> Mostrar informações das bases no console
 
 DROP DATABASE alura; --> Excluir base
 
@@ -18,32 +18,65 @@ CREATE TABLE aluno (
 	ativo BOOLEAN,
 	data_nascimento DATE,
 	hora_aula TIME,
-	dat_matricula TIMESTUMP
+	dat_matricula TIMESTAMP
 
 );
 
 ---- Fazendo INSERT ---- 
 
-INSERT INTO aluno (
-nome,
-cpf, 
-observacao,
-idade,
-dinheiro,
-altura,
-data_nascimento,
-hora_aula,
-dat_matricula
+INSERT INTO aluno 
+(nome,cpf, observacao,idade,dinheiro,altura,ativo,data_nascimento,hora_aula,dat_matricula) 
 
-) VALUES (
+VALUES 
+('Klaiton','12345678910','text',21,50.02,1.80,TRUE,'1999-06-10','17:30:00','2021-04-19 17:30:00');
 
-'Klaiton',
-'12345678910',
-'text',
-21,
-50.02,
-1.80,
-'1999-06-10',
-'17:30:00',
-'2021-04-19 17:30:00',
-);
+
+--- Fazendo consultas com SELECT ---
+
+SELECT * FROM aluno;
+
+
+--- Fazendo UPDATE ---
+
+UPDATE aluno
+	SET nome = 'klaiton Ricken',
+	cpf = '12364738485', 
+	observacao = 'teste 2',
+	idade = 22,
+	dinheiro = 100.76,
+	altura = 1.82,
+	ativo = FALSE,
+	data_nascimento = '1999-05-07',
+	hora_aula = '13:45:00',
+	dat_matricula = '2020-03-09 10:34:43'
+	WHERE id = 1;
+
+--- Deletando dados ----
+
+DELETE FROM aluno
+	WHERE nome = 'klaiton';
+	
+--- Usando AS ----
+	
+SELECT dat_matricula AS data_da_matricula FROM aluno;
+	
+SELECT dat_matricula AS "Data de Matricula" FROM aluno;
+
+INSERT INTO aluno (nome) VALUES ('Vinicius');
+INSERT INTO aluno (nome) VALUES ('Diogo');
+INSERT INTO aluno (nome) VALUES ('João');
+
+SELECT * 
+	FROM aluno
+	WHERE nome = 'Diogo';
+
+--- Consulta com filtros -----
+	
+SELECT * 
+	FROM aluno
+	WHERE nome LIKE '%go'; -- ou pode ser LIKE 'dio%'
+	
+	SELECT * 
+	FROM aluno
+	WHERE nome NOT LIKE '%go'; -- ou pode ser NOT LIKE 'dio%'
+
