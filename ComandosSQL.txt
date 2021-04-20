@@ -80,3 +80,260 @@ SELECT *
 	FROM aluno
 	WHERE nome NOT LIKE '%go'; -- ou pode ser NOT LIKE 'dio%'
 
+--- Consultando campos nulos ---
+	
+SELECT * 
+	FROM aluno
+	WHERE cpf IS NULL;
+	
+		
+SELECT * 
+	FROM aluno
+	WHERE cpf IS NOT NULL;
+
+--- outras consultas -----
+
+SELECT * 
+	FROM aluno
+	WHERE idade <> 21; -- Ou <=, >=, >, <
+	
+SELECT * 
+	FROM aluno
+	WHERE idade BETWEEN 21  AND 40;
+	
+--- Utilizando operadores AND e OR para consultas ---
+	
+SELECT * 
+	FROM aluno
+	WHERE idade IS NULL
+	AND cpf is NULL;
+	
+SELECT *
+	FROM aluno
+	WHERE dat_matricula BETWEEN '2020-01-01 00:00:00'
+	AND '2021-01-01 00:00:00'
+	OR nome LIKE '%h'
+	OR nome LIKE '%go%';
+
+CREATE TABLE curso (
+	id INTEGER NOT NULL,
+	nome VARCHAR(255) NOT NULL
+);
+
+INSERT INTO * VALUES (1, 'Ciência da Computação');
+
+SELECT * FROM curso;
+
+---- Usando PRIMARY KEY ----
+
+CREATE TABLE curso (
+	id INTEGER PRIMARY KEY,
+	nome VARCHAR(255) NOT NULL
+);
+
+INSERT INTO curso (id,nome) VALUES (1, 'Ciência da Computação');
+INSERT INTO curso (id,nome) VALUES (2, 'Engenharia Elétrica');
+
+DELETE FROM curso
+WHERE nome = 'Ciência da Computação';
+
+SELECT * FROM curso;
+DROP TABLE curso;
+
+--- Usando Foreign
+
+CREATE TABLE aluno (
+	id SERIAL PRIMARY KEY,
+	nome VARCHAR(255) NOT NULL
+);
+
+SELECT * FROM aluno;
+
+INSERT INTO aluno (nome) VALUES ('Klaiton');
+INSERT INTO aluno (nome) VALUES ('Diego');
+
+CREATE TABLE aluno_curso (
+	aluno_id INTEGER,
+	curso_id INTEGER,
+	FOREIGN KEY (aluno_id) REFERENCES aluno (id),
+	FOREIGN KEY (curso_id) REFERENCES curso (id)
+);
+
+DROP TABLE aluno_curso;
+SELECT * FROM aluno_curso; 
+
+INSERT INTO aluno_curso (aluno_id, curso_id) VALUES (1,1);
+INSERT INTO aluno_curso (aluno_id, curso_id) VALUES (1,2);
+--INSERT INTO aluno_curso (aluno_id, curso_id) VALUES (1,5);
+
+--- Usando Join ---
+
+SELECT aluno.nome as "Nome do aluno",
+		curso.nome as "Nome do curso"
+	FROM aluno
+	JOIN aluno_curso ON aluno_curso.aluno_id = aluno.id
+	JOIN curso ON curso.id = aluno_curso.curso_id;
+	
+INSERT INTO aluno (nome) VALUES ('Gabriel');
+INSERT INTO curso (nome) VALUES ('Java');
+	
+--- Usando LEFT JOIN ---
+
+SELECT aluno.nome as "Nome do aluno",
+		curso.nome as "Nome do curso"
+	FROM aluno
+	LEFT JOIN aluno_curso ON aluno_curso.aluno_id = aluno.id
+	LEFT JOIN curso ON curso.id = aluno_curso.curso_id;
+	-- A prioridade é aluno e aluno_curs
+	
+	SELECT aluno.nome as "Nome do aluno",
+		curso.nome as "Nome do curso"
+	FROM aluno
+	RIGHT JOIN aluno_curso ON aluno_curso.aluno_id = aluno.id
+	RIGHT JOIN curso ON curso.id = aluno_curso.curso_id;
+	-- A prioridade é curso e aluno_curso
+	
+	SELECT aluno.nome as "Nome do aluno",
+		curso.nome as "Nome do curso"
+	FROM aluno
+	FULL JOIN aluno_curso ON aluno_curso.aluno_id = aluno.id
+	FULL JOIN curso ON curso.id = aluno_curso.curso_id;
+	
+-- 	SELECT aluno.nome as "Nome do aluno",
+-- 		curso.nome as "Nome do curso"
+-- 	FROM aluno
+-- 	CROSS JOIN curso;
+
+DELETE FROM aluno WHERE id = 1;
+
+CREATE TABLE aluno_curso (
+	aluno_id INTEGER,
+	curso_id INTEGER,
+	FOREIGN KEY (aluno_id) REFERENCES aluno (id)
+	ON DELETE CASCADE
+	ON UPDATE CASCADE,
+	FOREIGN KEY (curso_id) REFERENCES curso (id)
+);
+
+INSERT INTO aluno_curso (aluno_id, curso_id) VALUES (1,1);
+INSERT INTO aluno_curso (aluno_id, curso_id) VALUES (1,2);
+INSERT INTO aluno_curso (aluno_id, curso_id) VALUES (2,2);
+	
+SELECT aluno.nome as "Nome do aluno",
+		curso.nome as "Nome do curso"
+	FROM aluno
+	JOIN aluno_curso ON aluno_curso.aluno_id = aluno.id
+	JOIN curso ON curso.id = aluno_curso.curso_id;
+	
+SELECT * FROM aluno_curso;
+SELECT * FROM aluno;
+
+INSERT INTO aluno(nome) VALUES ('Kleiton');
+
+UPDATE aluno
+	SET id = 11
+	WHERE id = 2;
+	
+SELECT aluno.nome as "Nome do aluno",
+		aluno.id as id_aluno,
+		curso.nome as "Nome do curso",
+		curso.id as id_curso
+	FROM aluno
+	JOIN aluno_curso ON aluno_curso.aluno_id = aluno.id
+	JOIN curso ON curso.id = aluno_curso.curso_id;
+
+--------------------------------------------
+
+DROP TABLE aluno_curso;
+DROP TABLE aluno;
+DROP TABLE curso;
+
+CREATE TABLE aluno (
+	id SERIAL PRIMARY KEY,
+	nome VARCHAR(255) NOT NULL
+);
+
+INSERT INTO aluno (nome) VALUES ('Klaiton');
+INSERT INTO aluno (nome) VALUES ('Diego');
+
+CREATE TABLE curso (
+	id INTEGER PRIMARY KEY,
+	nome VARCHAR(255) NOT NULL
+);
+
+INSERT INTO curso (id,nome) VALUES (1, 'Ciência da Computação');
+INSERT INTO curso (id,nome) VALUES (2, 'Engenharia Elétrica');
+
+CREATE TABLE aluno_curso (
+	aluno_id INTEGER,
+	curso_id INTEGER,
+	FOREIGN KEY (aluno_id) REFERENCES aluno (id)
+	ON DELETE CASCADE
+	ON UPDATE CASCADE,
+	FOREIGN KEY (curso_id) REFERENCES curso (id)
+);
+
+INSERT INTO aluno_curso (aluno_id, curso_id) VALUES (1,1);
+INSERT INTO aluno_curso (aluno_id, curso_id) VALUES (1,2);
+INSERT INTO aluno_curso (aluno_id, curso_id) VALUES (2,2);
+
+
+SELECT * 
+	FROM aluno
+	ORDER BY nome DESC;
+	
+SELECT * 
+	FROM aluno
+	ORDER BY nome, id DESC;	
+	
+SELECT * 
+	FROM aluno
+	ORDER BY 2,1 ASC;
+	
+SELECT aluno.nome as "Nome do aluno",
+		aluno.id as id_aluno,
+		curso.nome as "Nome do curso",
+		curso.id as id_curso
+	FROM aluno
+	JOIN aluno_curso ON aluno_curso.aluno_id = aluno.id
+	JOIN curso ON curso.id = aluno_curso.curso_id
+	ORDER BY aluno.nome, curso.nome DESC;
+	
+SELECT *
+	FROM aluno
+	ORDER BY id
+	LIMIT 1 -- pula todas as linha anteriores
+	OFfSET 1; -- inicia no próximo registro, 
+				--limitando novamente um número de consulta
+
+
+SELECT COUNT(id),
+	SUM(id),
+	MAX(id),
+	MIN(id),
+	ROUND(AVG(id),2)
+	FROM aluno;
+	
+SELECT aluno.nome,
+	COUNT(aluno.id)
+	FROM aluno
+	JOIN aluno_curso ON aluno_curso.aluno_id = aluno.id
+	JOIN curso ON aluno_curso.aluno_id = curso.id
+	GROUP BY aluno.nome
+	ORDER BY nome;
+
+SELECT curso.nome,
+	COUNT (aluno.id)
+	FROM curso
+	LEFT JOIN aluno_curso ON aluno_curso.curso_id = curso.id
+	LEFT JOIN aluno ON aluno.id = aluno_curso.aluno_id
+GROUP BY 1
+	HAVING COUNT (aluno.id) > 0; 
+	
+	--HAVING, usado para filtros com campos que estão sendo 
+	-- usados em GROUP BY,pois não podem ser usados no WHARE
+	
+SELECT *
+	FROM curso
+	LEFT JOIN aluno_curso ON aluno_curso.curso_id = curso.id
+	LEFT JOIN aluno ON aluno.id = aluno_curso.aluno_id;
